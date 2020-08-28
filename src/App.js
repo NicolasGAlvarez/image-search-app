@@ -18,17 +18,22 @@ const App = () => {
   }, []);
 
   const loadImages = useCallback(async () => {
-    setLoading(true);
-    const response = await API.search(searchTerm);
-    setImages(response.results);
-    setLoading(false);
+    try {
+      setLoading(true);
+      const response = await API.search(searchTerm);
+      setImages(response.results);
+      setLoading(false);
+    } catch (error) {
+      console.log('[!] Failed fetch.', error);
+    }
   }, [searchTerm]);
 
   const formSubmitted = useCallback((event) => {
     event.preventDefault();
+    if (!searchTerm.trim()) return;
     setImages([]); // Clear images array
     loadImages();
-  }, [loadImages]);
+  }, [loadImages, searchTerm]);
 
 
   return (
@@ -43,7 +48,7 @@ const App = () => {
         searchTerm={searchTerm}
       />
 
-      {loading ? <img className="u-full-width" alt="Loading..." src={loadingImg} /> : ''}
+      {loading ? <img className="loadingImg" alt="Loading..." src={loadingImg} /> : ''}
 
       <SimpleReactLightbox>
         <ImageGallery images={images} />

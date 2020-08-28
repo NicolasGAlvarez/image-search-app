@@ -23,3 +23,8 @@ a {
 a:hover {
   color: #eb510a;
 }
+
+.loadingImg {
+  margin: auto;
+  display: block;
+}

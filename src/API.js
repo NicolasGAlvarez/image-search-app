@@ -1,8 +1,9 @@
 require('dotenv').config()
+const apiUrl = `https://api.unsplash.com/search/photos?client_id=${process.env.REACT_APP_API_KEY}&query=`;
 
 export default {
   async search(searchTerm) {
-    const query = `${process.env.REACT_APP_API_URL}${searchTerm}`;
+    const query = `${apiUrl}${searchTerm}`;
 
     try {
       const response = await fetch(query);
