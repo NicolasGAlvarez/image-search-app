@@ -1,6 +1,9 @@
 import React, { useState, useCallback } from 'react';
 import './App.css';
 
+import SearchForm from './components/SearchForm';
+import ImageGallery from './components/ImageGallery';
+
 import loadingImg from './assets/loading.gif';
 import API from './API';
 
@@ -9,27 +12,25 @@ const App = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(false);
   const [images, setImages] = useState([]);
+  const [remainingSearches, setRemainingSearches] = useState('');
 
   const searchTermChanged = useCallback((event) => {
     setSearchTerm(event.target.value);
   }, []);
 
-  const loadImages = async () => {
+  const loadImages = useCallback(async () => {
     setLoading(true);
-    const images = await API.search(searchTerm);
-    setImages(images);
+    const response = await API.search(searchTerm);
+    setImages(response.results);
     setLoading(false);
-  }
+    setRemainingSearches(response.remaining);
+  }, [searchTerm]);
 
   const formSubmitted = useCallback((event) => {
     event.preventDefault();
-    if (!searchTerm.trim()) return;
-
-    console.log('Form submitted.');
-
     setImages([]); // Clear images array
     loadImages();
-  }, [images, searchTerm]);
+  }, [loadImages]);
 
 
   return (
@@ -38,49 +39,17 @@ const App = () => {
         <h3>Image Search App</h3>
       </div>
 
-      <form onSubmit={formSubmitted}>
-        <div className="row">
-          <label
-            className="twelve columns"
-            htmlFor="searchTerm"
-          >Search term</label>
-        </div>
-
-        <div className="row">
-          <div className="nine columns">
-            <input
-              name="searchTerm"
-              id="searchTerm"
-              className="u-full-width"
-              onChange={searchTermChanged}
-              value={searchTerm}
-            />
-          </div>
-
-          <div className="three columns">
-            <button
-              type="submit"
-              className="button-primary u-full-width"
-            >Search</button>
-          </div>
-        </div>
-      </form>
+      <SearchForm
+        formSubmitted={formSubmitted}
+        searchTermChanged={searchTermChanged}
+        searchTerm={searchTerm}
+      />
 
       {loading ? <img className="u-full-width" alt="Loading..." src={loadingImg} /> : ''}
 
-      <section className='images'>
-        {
-          images.map((image) => (
-            <a key={`a-${image.id}`} href={image.urls.regular}>
-              <img
-                className='u-full-width'
-                key={image.id}
-                alt={image.alt_description}
-                src={image.urls.small} />
-            </a>
-          ))
-        }
-      </section>
+      <h5>Remaining: {remainingSearches}</h5>
+
+      <ImageGallery images={images} />
     </div>
   );
 }

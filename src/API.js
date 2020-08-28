@@ -7,7 +7,12 @@ export default {
     try {
       const response = await fetch(query);
       const data = await response.json();
-      return data.results;
+      const remaining = response.headers.get('X-Ratelimit-Remaining');
+      const result = {
+        remaining: remaining,
+        ...data
+      }
+      return result;
     } catch (error) {
       console.log('[!] Failed fetch.', error);
     }
