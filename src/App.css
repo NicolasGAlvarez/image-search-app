@@ -10,3 +10,16 @@ input {
 .images {
   column-count: 3;
 }
+
+.imageThumb {
+  cursor: pointer;
+}
+
+a {
+  text-decoration: none;
+  color: #ff7637;
+}
+
+a:hover {
+  color: #eb510a;
+}

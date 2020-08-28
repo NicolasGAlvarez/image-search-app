@@ -3,16 +3,15 @@ import './App.css';
 
 import SearchForm from './components/SearchForm';
 import ImageGallery from './components/ImageGallery';
-
 import loadingImg from './assets/loading.gif';
 import API from './API';
 
-//TODO: Divide into components.
+import SimpleReactLightbox from "simple-react-lightbox";
+
 const App = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(false);
   const [images, setImages] = useState([]);
-  const [remainingSearches, setRemainingSearches] = useState('');
 
   const searchTermChanged = useCallback((event) => {
     setSearchTerm(event.target.value);
@@ -23,7 +22,6 @@ const App = () => {
     const response = await API.search(searchTerm);
     setImages(response.results);
     setLoading(false);
-    setRemainingSearches(response.remaining);
   }, [searchTerm]);
 
   const formSubmitted = useCallback((event) => {
@@ -47,9 +45,9 @@ const App = () => {
 
       {loading ? <img className="u-full-width" alt="Loading..." src={loadingImg} /> : ''}
 
-      <h5>Remaining: {remainingSearches}</h5>
-
-      <ImageGallery images={images} />
+      <SimpleReactLightbox>
+        <ImageGallery images={images} />
+      </SimpleReactLightbox>
     </div>
   );
 }

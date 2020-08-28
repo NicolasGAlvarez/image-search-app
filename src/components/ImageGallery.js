@@ -1,17 +1,18 @@
 import React from 'react';
 import ImageThumb from './ImageThumb';
+import { SRLWrapper } from 'simple-react-lightbox';
 
 const ImageGallery = (props) => {
   const { images } = props;
   return (
     <section className='images'>
-      {
-        images.map((image) => (
-          <a key={`a-${image.id}`} href={image.urls.regular}>
-            <ImageThumb image={image} />
-          </a>
-        ))
-      }
+      <SRLWrapper>
+        {
+          images.map((image) => (
+            <ImageThumb key={image.id} image={image} />
+          ))
+        }
+      </SRLWrapper>
     </section>
   );
 };
